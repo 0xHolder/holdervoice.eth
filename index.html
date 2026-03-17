@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HolderVoice - Plateforme de gouvernance pour token holders</title>
+    <style>
+        :root {
+            --color-bg-primary: #0f172a;
+            --color-bg-secondary: #1e293b;
+            --color-bg-tertiary: #334155;
+            --color-text-primary: #f1f5f9;
+            --color-text-secondary: #cbd5e1;
+            --color-text-muted: #94a3b8;
+            --color-accent: #38bdf8;
+            --color-accent-hover: #0ea5e9;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header {
+            padding: 32px 0;
+            border-bottom: 1px solid var(--color-bg-tertiary);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-accent);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-success));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .connect-btn {
+            background: var(--color-accent);
+            color: var(--color-bg-primary);
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+
+        .connect-btn:hover {
+            background: var(--color-accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .connect-btn.disabled {
+            background: var(--color-bg-tertiary);
+            color: var(--color-text-muted);
+            cursor: not-allowed;
+            position: relative;
+            padding-right: 90px;
+        }
+
+        .connect-btn.disabled:hover {
+            transform: none;
+        }
+
+        .connect-btn.disabled::after {
+            content: 'À venir';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid var(--color-warning);
+        }
+
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--color-text-primary), var(--color-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 22px;
+            color: var(--color-text-secondary);
+            max-width: 800px;
+            margin: 0 auto 48px;
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .feature-card {
+            background: var(--color-bg-secondary);
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-bg-tertiary);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .feature-card.coming-soon::before {
+            content: 'À venir';
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid var(--color-warning);
+        }
+
+        .feature-card.coming-soon {
+            opacity: 0.85;
+        }
+
+        .feature-card:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(56, 189, 248, 0.1);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--color-text-primary);
+        }
+
+        .feature-description {
+            color: var(--color-text-secondary);
+            font-size: 15px;
+        }
+
+        .current-vote-section {
+            background: linear-gradient(135deg, var(--color-bg-secondary), var(--color-bg-tertiary));
+            padding: 48px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 80px;
+            border: 2px solid var(--color-accent);
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .vote-card {
+            background: var(--color-bg-primary);
+            padding: 32px;
+            border-radius: var(--radius-md);
+            margin-top: 24px;
+        }
+
+        .vote-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--color-accent);
+        }
+
+        .vote-description {
+            color: var(--color-text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .vote-btn {
+            background: var(--color-success);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .vote-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .process-section {
+            margin-bottom: 80px;
+        }
+
+        .process-steps {
+            display: grid;
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .step {
+            background: var(--color-bg-secondary);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--color-accent);
+            display: flex;
+            gap: 20px;
+            position: relative;
+        }
+
+        .step.coming-soon::before {
+            content: 'À venir';
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid var(--color-warning);
+        }
+
+        .step.coming-soon {
+            opacity: 0.85;
+            border-left-color: var(--color-warning);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--color-accent);
+            color: var(--color-bg-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--color-text-primary);
+        }
+
+        .step-content p {
+            color: var(--color-text-secondary);
+            font-size: 15px;
+        }
+
+        .contact-section {
+            background: var(--color-bg-secondary);
+            padding: 48px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .contact-options {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .contact-btn {
+            background: var(--color-bg-tertiary);
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-accent);
+            padding: 16px 32px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .contact-btn:hover {
+            background: var(--color-accent);
+            color: var(--color-bg-primary);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--color-success);
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--color-bg-tertiary);
+            text-align: center;
+            color: var(--color-text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .footer-links a {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-accent);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 36px;
+            }
+
+            .subtitle {
+                font-size: 18px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-options {
+                flex-direction: column;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--color-warning);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            margin-top: 24px;
+        }
+
+        .warning-box h4 {
+            color: var(--color-warning);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .warning-box p {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🗳️</div>
+                    <span>HolderVoice</span>
+                </div>
+                <button class="connect-btn disabled">Connecter wallet</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Reprenez le contrôle de vos investissements</h1>
+                <p class="subtitle">
+                    HolderVoice est une plateforme de gouvernance décentralisée permettant aux token holders de se réunir, voter et exiger la transparence des LLC gérant leurs actifs tokenisés.
+                </p>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h3 class="feature-title">Accès token-gated</h3>
+                    <p class="feature-description">
+                        Seuls les détenteurs vérifiés de tokens peuvent voter. Authentification par signature wallet sans divulguer votre identité.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Votes on-chain</h3>
+                    <p class="feature-description">
+                        Chaque vote est enregistré sur la blockchain avec attestation EAS. Traçabilité complète et preuve juridiquement recevable.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📜</div>
+                    <h3 class="feature-title">Actions légales collectives</h3>
+                    <p class="feature-description">
+                        Demandes formelles de comptes (§18-305 Delaware), envoi de courriers recommandés, et coordination d'actions avec avocat mandaté.
+                    </p>
+                </div>
+
+                <div class="feature-card coming-soon">
+                    <div class="feature-icon">💬</div>
+                    <h3 class="feature-title">Discussion holders uniquement</h3>
+                    <p class="feature-description">
+                        Espace de discussion privé réservé aux token holders identifiés. Coordonnez-vous en toute confidentialité.
+                    </p>
+                </div>
+
+                <div class="feature-card coming-soon">
+                    <div class="feature-icon">🔍</div>
+                    <h3 class="feature-title">Transparence totale</h3>
+                    <p class="feature-description">
+                        Tous les courriers envoyés, réponses reçues et preuves d'envoi sont accessibles aux holders ayant participé au vote.
+                    </p>
+                </div>
+
+                <div class="feature-card coming-soon">
+                    <div class="feature-icon">🤝</div>
+                    <h3 class="feature-title">Financement collectif</h3>
+                    <p class="feature-description">
+                        Cagnotte smart contract pour partager les frais légaux. Fonds débloqués uniquement sur présentation des preuves d'envoi.
+                    </p>
+                </div>
+
+                <div class="feature-card coming-soon">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">Ressources de préparation collective</h3>
+                    <p class="feature-description">
+                        Les tokens représentent des droits sur des biens immobiliers détenus par des entités juridiques distinctes (LLC, S.A.). Si la plateforme devenait incapable d'assurer sa mission, cette rubrique recense les experts capables d'intervenir, explique les scénarios possibles et référence les professionnels vérifiés par la communauté.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="current-vote-section">
+                <span class="status-badge">🔴 Vote en cours</span>
+                <h2 class="section-title">Premier vote : Demande de comptes Series 118</h2>
+                
+                <div class="vote-card">
+                    <h3 class="vote-title">📋 Series 118 – 2318-2324 W Marquette Rd, Chicago</h3>
+                    <p class="vote-description">
+                        Les distributions ont été suspendues sans explication détaillée. Les taxes foncières 2022 ont été vendues (tax sale) et 36 699 USD restent impayés pour 2024/2025. Nous demandons formellement :
+                    </p>
+                    <ul style="color: var(--color-text-secondary); margin-left: 24px; margin-bottom: 24px; line-height: 1.8;">
+                        <li>États financiers 2022-2025 (US GAAP)</li>
+                        <li>Détail des flux de trésorerie et Operating Expenses</li>
+                        <li>Situation fiscale et plan de redressement</li>
+                        <li>Explication de l'arrêt des distributions</li>
+                    </ul>
+                    <button class="vote-btn" onclick="showVoteModal()">Voter maintenant (wallet requis)</button>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Note importante</h4>
+                    <p>Les premiers frais légaux sont financés personnellement. Si le gestionnaire refuse de coopérer, un système de contribution collective sera mis en place pour les actions ultérieures.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container process-section">
+            <h2 class="section-title">Comment ça marche ?</h2>
+            <div class="process-steps">
+                <div class="step coming-soon">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Identification token holder</h3>
+                        <p>Connectez votre wallet. Le système vérifie automatiquement que vous détenez les tokens de la Series concernée via signature cryptographique.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Vote on-chain</h3>
+                        <p>Votez pour ou contre la résolution proposée. Votre vote est enregistré sur la blockchain </p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Envoi de la demande formelle</h3>
+                        <p>Si le vote passe, un mandataire adresse la demande formelle au gestionnaire de la LLC par les voies légalement reconnues dans la juridiction applicable. La preuve d'envoi et de réception est conservée de façon infalsifiable et communiquée aux holders ayant participé au vote.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Accès aux preuves</h3>
+                        <p>Tous les courriers envoyés, tracking USPS, return receipts et réponses reçues sont publiés dans l'espace privé token-gated.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3>Action légale si nécessaire</h3>
+                        <p>Si aucune réponse satisfaisante dans les 30 jours, un cabinet Delaware mandaté peut déposer une action en Chancery Court.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container contact-section">
+            <h2 class="section-title">Proposer un vote ou poser une question</h2>
+            <p class="subtitle" style="margin-bottom: 0;">
+                Vous souhaitez lancer un vote pour une autre Series ? Vous avez des questions ? Contactez-nous de manière anonyme.
+            </p>
+            <div class="contact-options">
+                <a href="mailto:holdervoice@proton.me" class="contact-btn">📧 Email anonyme</a>
+                <a href="#" class="contact-btn" onclick="alert('Formulaire en construction')">📝 Formulaire anonyme</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">Documentation</a>
+                <a href="#">FAQ</a>
+                <a href="#">Discord</a>
+                <a href="#">Attestations EAS</a>
+            </div>
+            <p>&copy; 2026 HolderVoice - Plateforme de gouvernance décentralisée pour token holders</p>
+            <p style="margin-top: 8px; font-size: 13px;">
+                Cette plateforme est en phase de lancement. Seul le vote Series 118 est actuellement disponible.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        function connectWallet() {
+            if (typeof window.ethereum !== 'undefined') {
+                window.ethereum.request({ method: 'eth_requestAccounts' })
+                    .then(accounts => {
+                        alert('Wallet connecté : ' + accounts[0].substring(0, 10) + '...');
+                        document.querySelector('.connect-btn').textContent = accounts[0].substring(0, 6) + '...' + accounts[0].substring(38);
+                    })
+                    .catch(err => {
+                        alert('Erreur de connexion wallet : ' + err.message);
+                    });
+            } else {
+                alert('Aucun wallet détecté. Installez MetaMask ou utilisez un navigateur Web3.');
+            }
+        }
+
+        function showVoteModal() {
+            if (typeof window.ethereum !== 'undefined') {
+                window.ethereum.request({ method: 'eth_accounts' })
+                    .then(accounts => {
+                        if (accounts.length === 0) {
+                            alert('Connectez d\'abord votre wallet pour voter.');
+                            return;
+                        }
+                        const voteUrl = 'https://vote.holdervoice.org/series118';
+                        alert('Vous allez être redirigé vers l\'interface de vote.\n\nVotre wallet sera vérifié pour confirmer que vous détenez des tokens Series 118.');
+                        // window.location.href = voteUrl;
+                    });
+            } else {
+                alert('Aucun wallet détecté. Installez MetaMask pour voter.');
+            }
+        }
+    </script>
+</body>
+</html>
+
