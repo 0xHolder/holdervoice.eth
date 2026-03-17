@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token Governance Platform</title>
+    <style>
+        :root {
+            --color-bg-primary: #0f172a;
+            --color-bg-secondary: #1e293b;
+            --color-bg-tertiary: #334155;
+            --color-text-primary: #f1f5f9;
+            --color-text-secondary: #cbd5e1;
+            --color-text-muted: #94a3b8;
+            --color-accent: #38bdf8;
+            --color-accent-hover: #0ea5e9;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 40px rgba(56, 189, 248, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--color-bg-tertiary);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-accent);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-success));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: var(--shadow-glow);
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: var(--shadow-glow); }
+            50% { box-shadow: 0 0 60px rgba(56, 189, 248, 0.3); }
+        }
+
+        .hero {
+            padding: 100px 0 80px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        h1 {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--color-text-primary), var(--color-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .subtitle {
+            font-size: 22px;
+            color: var(--color-text-secondary);
+            max-width: 800px;
+            margin: 0 auto 48px;
+            line-height: 1.6;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .feature-card {
+            background: linear-gradient(145deg, var(--color-bg-secondary), var(--color-bg-tertiary));
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-bg-tertiary);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-accent), var(--color-success));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card.coming-soon::before {
+            content: 'À venir';
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid var(--color-warning);
+            z-index: 2;
+        }
+
+        .feature-card.coming-soon {
+            opacity: 0.7;
+            filter: grayscale(0.3);
+        }
+
+        .feature-card:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(16, 185, 129, 0.1));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--color-text-primary);
+        }
+
+        .feature-description {
+            color: var(--color-text-secondary);
+            font-size: 15px;
+        }
+
+        .current-vote-section {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(51, 65, 85, 0.4));
+            padding: 48px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 80px;
+            border: 2px solid var(--color-accent);
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .current-vote-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.03) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-align: center;
+            position: relative;
+        }
+
+        .vote-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 32px;
+            border-radius: var(--radius-md);
+            margin-top: 24px;
+            border: 1px solid var(--color-bg-tertiary);
+            position: relative;
+        }
+
+        .vote-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--color-accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vote-description {
+            color: var(--color-text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .vote-btn {
+            background: linear-gradient(135deg, var(--color-success), #059669);
+            color: var(--color-bg-primary);
+            border: none;
+            padding: 18px 32px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vote-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .vote-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .vote-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .vote-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .process-section {
+            margin-bottom: 80px;
+        }
+
+        .process-steps {
+            display: grid;
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .step {
+            background: linear-gradient(145deg, var(--color-bg-secondary), var(--color-bg-tertiary));
+            padding: 24px;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--color-accent);
+            display: flex;
+            gap: 20px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .step:hover {
+            transform: translateX(8px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .step.coming-soon::before {
+            content: 'À venir';
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid var(--color-warning);
+        }
+
+        .step.coming-soon {
+            opacity: 0.7;
+            border-left-color: var(--color-warning);
+        }
+
+        .step-number {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+            color: var(--color-bg-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .step-content h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--color-text-primary);
+        }
+
+        .step-content p {
+            color: var(--color-text-secondary);
+            font-size: 15px;
+        }
+
+        .contact-section {
+            background: linear-gradient(145deg, var(--color-bg-secondary), var(--color-bg-tertiary));
+            padding: 48px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin-bottom: 80px;
+            border: 1px solid var(--color-bg-tertiary);
+        }
+
+        .contact-options {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .contact-btn {
+            background: var(--color-bg-tertiary);
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-accent);
+            padding: 16px 32px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .contact-btn:hover::before {
+            left: 100%;
+        }
+
+        .contact-btn:hover {
+            background: var(--color-accent);
+            color: var(--color-bg-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .contact-btn.disabled {
+            background: var(--color-bg-tertiary);
+            color: var(--color-text-muted);
+            cursor: not-allowed;
+            position: relative;
+            padding-right: 90px;
+            box-shadow: none;
+        }
+
+        .contact-btn.disabled::before {
+            display: none;
+        }
+
+        .contact-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+            background: var(--color-bg-tertiary);
+            color: var(--color-text-muted);
+        }
+
+        .contact-btn.disabled::after {
+            content: 'À venir';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid var(--color-warning);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--color-success);
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            animation: pulse-badge 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-badge {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+        }
+
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--color-bg-tertiary);
+            text-align: center;
+            color: var(--color-text-muted);
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-accent);
+            transition: width 0.3s;
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-accent);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 36px;
+            }
+
+            .subtitle {
+                font-size: 18px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-options {
+                flex-direction: column;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .current-vote-section {
+                padding: 32px 24px;
+            }
+
+            .vote-card {
+                padding: 24px;
+            }
+        }
+
+        .warning-box {
+            background: linear-gradient(145deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+            border: 1px solid var(--color-warning);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            margin-top: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .warning-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--color-warning);
+        }
+
+        .warning-box h4 {
+            color: var(--color-warning);
+            margin-bottom: 8px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .warning-box p {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        /* ===== TEMPLATES SECTION ===== */
+        .templates-section {
+            margin-bottom: 80px;
+        }
+
+        .templates-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .templates-subtitle {
+            color: var(--color-text-secondary);
+            font-size: 16px;
+            max-width: 700px;
+            margin: 12px auto 0;
+            line-height: 1.6;
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .template-card {
+            background: linear-gradient(145deg, var(--color-bg-secondary), var(--color-bg-tertiary));
+            border: 1px solid var(--color-bg-tertiary);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.7;
+            filter: grayscale(0.3);
+        }
+
+        .template-card::after {
+            content: 'À venir';
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid var(--color-warning);
+        }
+
+        .template-card:hover {
+            border-color: var(--color-warning);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            opacity: 0.9;
+        }
+
+        .template-card-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .template-card-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: 8px;
+        }
+
+        .template-card-jurisdiction {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--color-accent);
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .template-card-description {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .template-card-modes {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .template-mode-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: rgba(51, 65, 85, 0.8);
+            color: var(--color-text-muted);
+            border: 1px solid var(--color-bg-tertiary);
+        }
+
+        .templates-disclaimer {
+            margin-top: 28px;
+            padding: 16px 20px;
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            color: var(--color-text-muted);
+            text-align: center;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🗳️</div>
+                    <span>Token Holders Collective - holdervoice.eth</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <div class="disclaimer-banner" style="
+                background: linear-gradient(145deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+                border: 1px solid rgba(239, 68, 68, 0.3);
+                border-radius: var(--radius-lg);
+                padding: 20px;
+                margin: 20px 0;
+                text-align: center;
+                font-size: 13px;
+                color: var(--color-danger);
+            ">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px;">
+                    <span style="font-size: 20px;">⚠️</span>
+                    <strong>IMPORTANT DISCLAIMER</strong>
+                </div>
+                <p style="margin: 0; line-height: 1.5;">
+                    Cette plateforme <strong>n'est pas un service juridique ni de conseil fiscal</strong>. Elle facilite uniquement la coordination collective des holders.
+                    <strong>Aucune garantie de résultats</strong>. Les actions individuelles restent possibles et recommandées.
+                    <strong>Consultez vos propres conseillers professionnels</strong>.
+                </p>
+            </div>
+        </section>
+
+        <section class="hero">
+            <div class="container">
+                <h1>Reprenez le contrôle de vos investissements</h1>
+                <p class="subtitle">
+                    Cette plateforme est une plateforme de gouvernance décentralisée permettant aux token holders de se réunir, voter et exiger la transparence des corporations gérant leurs actifs tokenisés.
+                </p>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="current-vote-section">
+                <span class="status-badge">🔴 Vote en cours</span>
+                <h2 class="section-title" style="text-shadow: 0 0 30px rgba(56, 189, 248, 0.3);">Demande de livres et registres §220</h2>
+                
+                <div class="vote-card">
+                    <p class="vote-description" style="font-size: 14px; color: var(--color-text-muted); margin-bottom: 16px;">
+                        <strong style="color: var(--color-accent);">REA****** 1418 MARQUETTE RD., INC</strong> — Delaware Corporation — 1418 W Marquette Rd, Chicago, IL 60636
+                    </p>
+                    <p class="vote-description" style="margin-bottom: 24px;">
+                        Demande formelle d'accès aux livres et registres sous <strong style="color: var(--color-accent);">8 Del. C. §220</strong> pour vérifier la gestion des revenus locatifs et permettre la déclaration correcte des revenus pour les token holders.
+                    </p>
+                    
+                    <a href="https://snapshot.org/#/s:holdervoice.eth/proposal/0x58c9a8203c83e28469bbd9d823e0fde84646524d852967761418f482b0472985" target="_blank" class="vote-btn" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none;">
+                        <span>🗳️ Voter sur Snapshot</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h3 class="feature-title">Accès token-gated</h3>
+                    <p class="feature-description">
+                        Seuls les détenteurs vérifiés de tokens peuvent voter. Authentification sécurisée sans divulguer votre identité.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Votes on-chain</h3>
+                    <p class="feature-description">
+                        Chaque vote est enregistré sur la blockchain avec attestation EAS. Traçabilité complète et preuve juridiquement recevable.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📜</div>
+                    <h3 class="feature-title">Actions légales collectives</h3>
+                    <p class="feature-description">
+                        Demandes formelles de comptes (§18-305 Delaware), envoi de courriers recommandés, et coordination d'actions avec avocat mandaté.
+                    </p>
+                </div>
+
+                <div class="feature-card coming-soon">
+                    <div class="feature-icon">💬</div>
+                    <h3 class="feature-title">Discussion holders uniquement</h3>
+                    <p class="feature-description">
+                        Espace de discussion privé réservé aux token holders identifiés. Coordonnez-vous en toute confidentialité.
+                    </p>
+                </div>
+
+                <div class="feature-card coming-soon">
+                    <div class="feature-icon">🔍</div>
+                    <h3 class="feature-title">Transparence totale</h3>
+                    <p class="feature-description">
+                        Tous les courriers envoyés, réponses reçues et preuves d'envoi sont accessibles aux holders ayant participé au vote.
+                    </p>
+                </div>
+
+                <div class="feature-card coming-soon">
+                    <div class="feature-icon">🤝</div>
+                    <h3 class="feature-title">Financement collectif</h3>
+                    <p class="feature-description">
+                        Cagnotte smart contract pour partager les frais légaux. Fonds débloqués uniquement sur présentation des preuves d'envoi.
+                    </p>
+                </div>
+
+                <div class="feature-card coming-soon">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">Ressources de préparation collective</h3>
+                    <p class="feature-description">
+                        Les tokens représentent des droits sur des biens immobiliers détenus par des entités juridiques distinctes (corporations, S.A.). Si la plateforme devenait incapable d'assurer sa mission, cette rubrique recense les experts capables d'intervenir, explique les scénarios possibles et référence les professionnels vérifiés par la communauté.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TEMPLATES LÉGAUX ===== -->
+        <section class="container templates-section" id="templates">
+            <div class="templates-header">
+                <span class="status-badge" style="
+                    background: rgba(245, 158, 11, 0.15);
+                    color: var(--color-warning);
+                    border-color: rgba(245, 158, 11, 0.3);
+                    animation: none;
+                ">🔜 À venir</span>
+                <h2 class="section-title">Boîte à outils juridiques</h2>
+                <p class="templates-subtitle">
+                    Lettres types, emails et courriers recommandés prêts à l'emploi pour exercer vos droits d'actionnaire.
+                    Chaque modèle est nominatif, fondé sur un texte de loi précis, et conçu pour créer une obligation de réponse.
+                </p>
+            </div>
+
+            <div class="templates-grid">
+
+                <div class="template-card">
+                    <div class="template-card-icon">📋</div>
+                    <div class="template-card-jurisdiction">Delaware · 8 Del. C. §220</div>
+                    <h3 class="template-card-title">Demande d'accès aux livres et registres</h3>
+                    <p class="template-card-description">
+                        Demande formelle nominative adressée au registered agent de la corporation.
+                        Crée une obligation légale de réponse sous 30 jours. Utilisable individuellement sans vote collectif préalable.
+                    </p>
+                    <div class="template-card-modes">
+                        <span class="template-mode-badge">📧 Email</span>
+                        <span class="template-mode-badge">✉️ Courrier recommandé</span>
+                        <span class="template-mode-badge">📄 PDF</span>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-card-icon">💰</div>
+                    <div class="template-card-jurisdiction">Delaware · Operating Agreement</div>
+                    <h3 class="template-card-title">Contestation de suspension de distributions</h3>
+                    <p class="template-card-description">
+                        Mise en demeure formelle exigeant la justification contractuelle de toute suspension de distributions,
+                        avec référence aux clauses de l'Operating Agreement et aux obligations du Manager.
+                    </p>
+                    <div class="template-card-modes">
+                        <span class="template-mode-badge">📧 Email</span>
+                        <span class="template-mode-badge">✉️ Courrier recommandé</span>
+                        <span class="template-mode-badge">📄 PDF</span>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-card-icon">🏛️</div>
+                    <div class="template-card-jurisdiction">U.S. Federal · IRC §6031 / Schedule K-1</div>
+                    <h3 class="template-card-title">Demande de Schedule K-1 et documents fiscaux</h3>
+                    <p class="template-card-description">
+                        Demande formelle de transmission des documents fiscaux annuels obligatoires (Schedule K-1, Form 1099-DIV,
+                        Form 1042-S pour non-résidents U.S.). Délai légal de transmission imposé par l'IRS.
+                    </p>
+                    <div class="template-card-modes">
+                        <span class="template-mode-badge">📧 Email</span>
+                        <span class="template-mode-badge">📄 PDF</span>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-card-icon">🏠</div>
+                    <div class="template-card-jurisdiction">Illinois · Cook County</div>
+                    <h3 class="template-card-title">Alerte impayés de taxes foncières</h3>
+                    <p class="template-card-description">
+                        Mise en demeure fondée sur les données publiques du Cook County Treasurer.
+                        Exige un plan de remédiation pour les arriérés de property tax exposant le bien à un tax sale.
+                    </p>
+                    <div class="template-card-modes">
+                        <span class="template-mode-badge">📧 Email</span>
+                        <span class="template-mode-badge">✉️ Courrier recommandé</span>
+                        <span class="template-mode-badge">📄 PDF</span>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-card-icon">⚖️</div>
+                    <div class="template-card-jurisdiction">Delaware · Chancery Court</div>
+                    <h3 class="template-card-title">Mise en demeure pré-contentieuse</h3>
+                    <p class="template-card-description">
+                        Lettre d'avocat type notifiant l'intention de déposer une action en Delaware Chancery Court
+                        en cas d'absence de réponse. Inclut la demande de fee-shifting et la liste des griefs documentés.
+                    </p>
+                    <div class="template-card-modes">
+                        <span class="template-mode-badge">✉️ Courrier recommandé</span>
+                        <span class="template-mode-badge">📄 PDF</span>
+                        <span class="template-mode-badge">⚖️ Via avocat</span>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-card-icon">🔍</div>
+                    <div class="template-card-jurisdiction">Multi-juridictions</div>
+                    <h3 class="template-card-title">Demande d'information sur la structure de gestion</h3>
+                    <p class="template-card-description">
+                        Demande formelle de divulgation de l'organigramme juridique, des flux financiers inter-entités
+                        et des contrats de gestion. Fondée sur les obligations fiduciaires du Manager.
+                    </p>
+                    <div class="template-card-modes">
+                        <span class="template-mode-badge">📧 Email</span>
+                        <span class="template-mode-badge">✉️ Courrier recommandé</span>
+                        <span class="template-mode-badge">📄 PDF</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="templates-disclaimer">
+                ⚠️ Ces modèles sont fournis à titre informatif uniquement et ne constituent pas un conseil juridique.
+                Chaque situation est unique — consultez un avocat avant tout envoi.
+                Les modèles sont fondés sur des textes de loi publics et vérifiables.
+            </div>
+        </section>
+
+        <section class="container process-section">
+            <h2 class="section-title">Comment ça marche ?</h2>
+            <div class="process-steps">
+                <div class="step coming-soon">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Identification token holder</h3>
+                        <p>Connectez-vous. Le système vérifie automatiquement que vous détenez les tokens de la corporation concernée via signature cryptographique.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Vote on-chain</h3>
+                        <p>Votez pour ou contre la résolution proposée. Votre vote est enregistré sur la blockchain </p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Envoi de la demande formelle</h3>
+                        <p>Si le vote passe, un mandataire adresse la demande formelle au gestionnaire de la corporation par les voies légalement reconnues dans la juridiction applicable. La preuve d'envoi et de réception est conservée de façon infalsifiable et communiquée aux holders ayant participé au vote.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Accès aux preuves</h3>
+                        <p>Tous les courriers envoyés, tracking postal, return receipts et réponses reçues sont publiés dans l'espace privé token-gated.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3>Action légale si nécessaire</h3>
+                        <p>Si aucune réponse satisfaisante dans les 30 jours, un cabinet Delaware mandaté peut déposer une action en Chancery Court.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container contact-section">
+            <h2 class="section-title">Proposer un vote ou poser une question</h2>
+            <p class="subtitle" style="margin-bottom: 0;">
+                Vous souhaitez lancer un vote pour une autre corporation ? Vous avez des questions ? Contactez-nous de manière anonyme.
+            </p>
+            <div class="contact-options">
+                <a href="mailto:holdervoice@proton.me" class="contact-btn">📧 Email</a>
+                <button class="contact-btn disabled">📝 Formulaire anonyme</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+
+            </div>
+            <p>&copy; Token Holders Collective - holdervoice.eth</p>
+            <p style="font-size: 12px; margin-top: 8px; color: var(--color-text-muted);">
+                This platform facilitates the exercise of statutory stockholder rights.
+                It does not constitute legal advice and is protected as lawful collective action
+                under applicable law.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+    </script>
+</body>
+</html>
